@@ -2,7 +2,8 @@
 
 # SNaKx
 A classic snake game with a puzzle game mode.
-![Wireframes of the SNaKx game](https://imgur.com/a/ceBevg9)
+![Wireframes of the SNaKx game](https://i.imgur.com/YS3eGTo.png)
+![Wireframes of the SNaKx game](https://i.imgur.com/cJhIOqt.png)
 
 # Key Features
 - A snake moves non-stop and is directed by the player with the keyboard.
