@@ -61,62 +61,34 @@ function Snake(){
 
 function setDirection(k){
     lastDirection = currentDirection
-    if(k.key == direction.right || k.key == direction.left || k.key == direction.up || k.key == direction.down) // tried 37 38 39 40 but could'nt get it to work
+    if(k.key == direction.right && lastDirection != direction.left ||
+        k.key == direction.left && lastDirection != direction.right ||
+        k.key == direction.up && lastDirection != direction.down ||
+        k.key == direction.down && lastDirection != direction.up) // tried 37 38 39 40 but could'nt get it to work
     currentDirection = k.key // get a new key if it's one of the arrow keys
 }
 
 function SnakeMove(){
+    const head = {...snake[0]}; // creating a new head seperate from the original (no pointer)
     if( currentDirection == direction.left && lastDirection != direction.right){
-        const head = {...snake[0]}; // creating a new head seperate from the original (no pointer)
         head.x -= 1; // move head to the left 1 square
         snake.pop(); // remove the snake's last part
-        snake.unshift(head); // adding head at the start of the array ()
-    }
-    else if(currentDirection == direction.left && lastDirection == direction.right){
-        const head = {...snake[0]};
-        head.x += 1;
-        snake.pop();
-        snake.unshift(head);
-        currentDirection = lastDirection;
+        snake.unshift(head); // adding head at the start of the snake
     }
     else if(currentDirection == direction.right && lastDirection != direction.left){
-        const head = {...snake[0]};
         head.x += 1;
         snake.pop();
         snake.unshift(head);
     }
-    else if(currentDirection == direction.right && lastDirection == direction.left){
-        const head = {...snake[0]};
-        head.x -= 1;
-        snake.pop();
-        snake.unshift(head);
-        currentDirection = lastDirection;
-    }
     else if(currentDirection == direction.down && lastDirection != direction.up){
-        const head = {...snake[0]};
         head.y += 1;
         snake.pop();
         snake.unshift(head);
-    }
-    else if(currentDirection == direction.down && lastDirection == direction.up){
-        const head = {...snake[0]};
-        head.y -= 1;
-        snake.pop();
-        snake.unshift(head);
-        currentDirection = lastDirection;
     }
     else if(currentDirection == direction.up && lastDirection != direction.down){
-        const head = {...snake[0]};
         head.y -= 1;
         snake.pop();
         snake.unshift(head);
-    }
-    else if(currentDirection == direction.up && lastDirection == direction.down){
-        const head = {...snake[0]};
-        head.y += 1;
-        snake.pop();
-        snake.unshift(head);
-        currentDirection = lastDirection;
     }
 }
 function Food(){ // draw the food
