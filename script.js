@@ -5,6 +5,8 @@ const board = document.querySelector("#board");
 let w = board.width;
 let h = board.height;
 
+let score = 0;
+
 let headColor = "rgb(9, 235, 73)";
 let bodyColor = "rgb(27, 171, 68)";
 let snake = [
@@ -25,7 +27,7 @@ document.addEventListener("keyup", setDirection); // add event listener to all k
 let sqrSize = 20;
 let x = w / sqrSize; // number of squares on the x line
 let y = h / sqrSize; // number of the squares on the y line
-
+let food = Food();
 
 
 const ctx = board.getContext("2d"); // drawing tool
@@ -34,6 +36,7 @@ loop = setInterval(Frame,FPS) // 66ms * 15 = 1000ms (calling this function 15 ti
 function Frame(){ 
     Board();
     Food();
+    DrawFood();
     Snake();
     SnakeMove();
 }
@@ -69,29 +72,66 @@ function setDirection(k){
 }
 
 function SnakeMove(){
-    const head = {...snake[0]}; // creating a new head seperate from the original (no pointer)
+    const head = {...snake[0]}; // creating a new head seperate from the original (no pointer) 
     if( currentDirection == direction.left && lastDirection != direction.right){
         head.x -= 1; // move head to the left 1 square
-        snake.pop(); // remove the snake's last part
+        if(food.x == snake[0].x && food.y == snake[0].y){ // if location of the food is same as the location of snake's head
+            food = Food(); // create a new food location
+            score++;
+        }
+        else{
+            snake.pop(); // else remove the snake's last part
+        }
         snake.unshift(head); // adding head at the start of the snake
     }
     else if(currentDirection == direction.right && lastDirection != direction.left){
         head.x += 1;
-        snake.pop();
+        if(food.x == snake[0].x && food.y == snake[0].y){
+            food = Food();
+            score++;
+        }
+        else{
+            snake.pop();
+        }
         snake.unshift(head);
     }
     else if(currentDirection == direction.down && lastDirection != direction.up){
         head.y += 1;
-        snake.pop();
+        if(food.x == snake[0].x && food.y == snake[0].y){
+            food = Food();
+            score++;
+        }
+        else{
+            snake.pop();
+        }
         snake.unshift(head);
     }
     else if(currentDirection == direction.up && lastDirection != direction.down){
         head.y -= 1;
-        snake.pop();
+        if(food.x == snake[0].x && food.y == snake[0].y){
+            food = Food();
+            score++;
+        }
+        else{
+            snake.pop();
+        }
         snake.unshift(head);
     }
 }
-function Food(){ // draw the food
-
+function Food(){ // generate a location for the food
+    let food = {
+        x: Math.floor(Math.random() * x),
+        y: Math.floor(Math.random() * y)
+    }
+    while(snake.some((tile) => tile.x == food.x && tile.y == food.y)){
+        food = {
+            x: Math.floor(Math.random() * x),
+            y: Math.floor(Math.random() * y)
+        }
+    }
+    return food;
+}
+function DrawFood(){
+    Square(food.x, food.y, "red")
 }
 
