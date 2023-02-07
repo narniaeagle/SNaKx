@@ -1,4 +1,5 @@
-let FPS = 1000 / 8; // fps
+let speed = 1.01; // 1.01 to 2 slider
+let FPS = 1000 / (8 * speed); // fps
 let loop;
 let boardColor = "rgb(6, 61, 21)";
 const board = document.querySelector("#board");
@@ -12,9 +13,11 @@ let score = 0;
 let headColor = "rgb(9, 235, 73)";
 let bodyColor = "rgb(27, 171, 68)";
 let snake = [
-    {x: 1, y: 0},
-    {x: 0, y: 0}
+    {x: 15, y: 7},
+    {x: 14, y: 7}
 ];
+const lngth = document.querySelector("#length");
+const spd = document.querySelector("#speed");
 
 let currentDirection = "";
 let lastDirection = "";
@@ -42,7 +45,12 @@ let food = Food();
 
 const ctx = board.getContext("2d"); // drawing tool
 
+
+
+
 hscr.innerHTML = `High Score: ${localStorage.getItem("highScore") || 0}`
+lngth.innerHTML = `Length: ${snake.length}`
+spd.innerHTML = `Speed: ${Math.round((speed-1)*100)}`
 loop = setInterval(Frame,FPS) // 66ms * 15 = 1000ms (calling this function 15 times in a second)
 
 
@@ -107,6 +115,7 @@ function Movement(head){
         snake.pop(); // else remove the snake's last part
     }
     snake.unshift(head); // adding head at the start of the snake
+    lngth.innerHTML = `Length: ${snake.length}`
 }
 function SnakeMove(){
     const head = {...snake[0]}; // creating a new head seperate from the original (no pointer) 
