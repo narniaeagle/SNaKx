@@ -5,8 +5,10 @@ const board = document.querySelector("#board");
 let w = board.width;
 let h = board.height;
 
-let score = 0;
 const scr = document.querySelector("#score");
+const hscr = document.querySelector("#h-score");
+let score = 0;
+
 let headColor = "rgb(9, 235, 73)";
 let bodyColor = "rgb(27, 171, 68)";
 let snake = [
@@ -16,12 +18,20 @@ let snake = [
 
 let currentDirection = "";
 let lastDirection = "";
-const direction = {
+// because of .keyCode is not recommended we are using .key
+// https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
+// https://www.w3.org/TR/uievents-key/#key-string
+const input = { 
     right: "ArrowRight",
     left: "ArrowLeft",
     up: "ArrowUp",
-    down: "ArrowDown"
+    down: "ArrowDown",
+    p: "p",
+    escape: "Escape",
+    space: " "
 }
+
+let pause = false;
 
 document.addEventListener("keyup", setDirection); // add event listener to all keypress
 let sqrSize = 10;
@@ -32,8 +42,15 @@ let food = Food();
 
 const ctx = board.getContext("2d"); // drawing tool
 
+hscr.innerHTML = `High Score: ${localStorage.getItem("highScore") || 0}`
 loop = setInterval(Frame,FPS) // 66ms * 15 = 1000ms (calling this function 15 times in a second)
+
+
+
+
+
 function Frame(){ 
+    if(pause == false){
         Board();
         Food();
         DrawFood();
@@ -41,6 +58,7 @@ function Frame(){
         SnakeMove();
         LoseWall();
         LoseSelf();
+    }
 }
 
 function Board(){
@@ -65,12 +83,17 @@ function Snake(){
 }
 
 function setDirection(k){
-    lastDirection = currentDirection
-    if(k.key == direction.right && lastDirection != direction.left ||
-        k.key == direction.left && lastDirection != direction.right ||
-        k.key == direction.up && lastDirection != direction.down ||
-        k.key == direction.down && lastDirection != direction.up) // tried 37 38 39 40 but could'nt get it to work
-    currentDirection = k.key // get a new key if it's one of the arrow keys
+    if(k.key == input.p || k.key == input.escape || k.key == input.space){
+        pause = !pause;
+    }
+    if(pause == false){
+        lastDirection = currentDirection
+        if(k.key == input.right && lastDirection != input.left ||
+            k.key == input.left && lastDirection != input.right ||
+            k.key == input.up && lastDirection != input.down ||
+            k.key == input.down && lastDirection != input.up)
+            currentDirection = k.key // get a new key if it's one of the arrow keys
+    }
 }
 
 function Movement(head){
@@ -78,6 +101,7 @@ function Movement(head){
         food = Food(); // create a new food location
         score++;
         scr.innerHTML = `Score: ${score}`;
+        UpdateHighScore();
     }
     else{
         snake.pop(); // else remove the snake's last part
@@ -86,19 +110,19 @@ function Movement(head){
 }
 function SnakeMove(){
     const head = {...snake[0]}; // creating a new head seperate from the original (no pointer) 
-    if( currentDirection == direction.left && lastDirection != direction.right){
+    if( currentDirection == input.left && lastDirection != input.right){
         head.x -= 1; // move head to the left 1 square
         Movement(head);
     }
-    else if(currentDirection == direction.right && lastDirection != direction.left){
+    else if(currentDirection == input.right && lastDirection != input.left){
         head.x += 1;
         Movement(head);
     }
-    else if(currentDirection == direction.down && lastDirection != direction.up){
+    else if(currentDirection == input.down && lastDirection != input.up){
         head.y += 1;
         Movement(head);
     }
-    else if(currentDirection == direction.up && lastDirection != direction.down){
+    else if(currentDirection == input.up && lastDirection != input.down){
         head.y -= 1;
         Movement(head);
     }
@@ -126,14 +150,23 @@ function LoseWall(){
         snake[0].x >= xsqr ||
         snake[0].y < 0 ||
         snake[0].y >= ysqr)
-        clearInterval(loop);
+        GameOver();
 }
 
 function LoseSelf(){
     for(let i=1; i<snake.length; i++){
         if(snake[i].x == snake[0].x && snake[i].y == snake[0].y){
-            console.log("lol bro look at your face")
-            clearInterval(loop);
+            GameOver();
         }
     }
+}
+function UpdateHighScore(){
+    if(score > localStorage.getItem("highScore") || 0){
+        localStorage.setItem("highScore", score.toString())
+        hscr.innerHTML = `High Score: ${localStorage.getItem("highScore")}`
+    }
+}
+function GameOver(){
+    clearInterval(loop);
+    UpdateHighScore();
 }
