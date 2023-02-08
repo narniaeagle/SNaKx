@@ -18,7 +18,7 @@ body{
 }
 
 #game-over{
-  background-color: rgba(0,0,0, 1);
+  background-color: rgba(0,0,0, 0.4);
   visibility: hidden;
   z-index: 1;
 }
@@ -44,7 +44,9 @@ body{
   color: white;
 }
 #settings{
-  cursor: pointer;
+  width:200px;
+  height:200px;
+  cursor: url(images/pointer.png), pointer;
   font-size: 18px;
   color: white;
   content: "\2699";

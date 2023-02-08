@@ -7,6 +7,7 @@ let w = board.width;
 let h = board.height;
 
 const scr = document.querySelector("#score");
+const msg = document.querySelector("#message");
 const hscr = document.querySelector("#h-score");
 let score = 0;
 
@@ -18,9 +19,10 @@ let snake = [
 ];
 const lngth = document.querySelector("#length");
 const sttngs = document.querySelector("#settings");
-sttngs.addEventListener("click", Settings);
+sttngs.addEventListener("click", Menu);
 const spd = document.querySelector("#speed");
 const gm = document.querySelector("#game-over");
+const mn = document.querySelector("#menu")
 
 let currentDirection = "";
 let lastDirection = "";
@@ -57,8 +59,8 @@ spd.innerHTML = `Speed: ${Math.round((speed-1)*100)}`
 loop = setInterval(Frame,FPS) // 66ms * 15 = 1000ms (calling this function 15 times in a second)
 
 
-function Settings(){
-    console.log("bas")
+function Menu(){
+    mn.style.visibility = "visible";
 }
 
 
@@ -184,13 +186,19 @@ function GameOver(){
     clearInterval(loop);
     UpdateHighScore();
     gm.style.visibility = "visible";
-    gm.style.zIndex= "1";
+    msg.innerHTML = "RESTART?";
+    msg.addEventListener("click", Reset);
+    msg.style.cursor = "pointer";
 }
 function Reset(){
+    msg.removeEventListener("click", Reset);
+    msg.innerHTML = "PRESS ARROW KEYS TO START"
+    gm.style.visibility = "hidden";
     snake = [
         {x: 15, y: 7},
         {x: 14, y: 7}
     ];
+    food = Food();
     loop = setInterval(Frame,FPS)
     score = 0;
     currentDirection = "";
