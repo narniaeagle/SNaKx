@@ -17,6 +17,11 @@ body{
   margin-right: 24px;
 }
 
+#menu{
+  background-color: rgba(0,0,0, 1);
+  visibility: hidden;
+  z-index: 1;
+}
 #board{
   width: 82%;
   height: 100%;
@@ -25,9 +30,8 @@ body{
   justify-content: center;
   align-items: center;
   margin: auto;
-}
-#center{
-  text-align: center;
+  visibility: visible;
+  z-index: -1;
 }
 
 .lowerpart{
@@ -37,13 +41,14 @@ body{
 }
 #length{
   color: white;
-  margin-right: 24px;
 }
-#menu{
+#settings{
+  cursor: pointer;
   font-size: 18px;
   color: white;
   content: "\2699";
   margin-right: 24px;
+  margin-left: 24px;
 }
 #speed{
   color: white;

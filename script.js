@@ -17,7 +17,10 @@ let snake = [
     {x: 14, y: 7}
 ];
 const lngth = document.querySelector("#length");
+const sttngs = document.querySelector("#settings");
+sttngs.addEventListener("click", Settings);
 const spd = document.querySelector("#speed");
+const mn = document.querySelector("#menu");
 
 let currentDirection = "";
 let lastDirection = "";
@@ -54,7 +57,9 @@ spd.innerHTML = `Speed: ${Math.round((speed-1)*100)}`
 loop = setInterval(Frame,FPS) // 66ms * 15 = 1000ms (calling this function 15 times in a second)
 
 
-
+function Settings(){
+    console.log("bas")
+}
 
 
 function Frame(){ 
@@ -178,4 +183,18 @@ function UpdateHighScore(){
 function GameOver(){
     clearInterval(loop);
     UpdateHighScore();
+    mn.style.visibility = "visible";
+    mn.style.zIndex= "1";
+}
+function Reset(){
+    snake = [
+        {x: 15, y: 7},
+        {x: 14, y: 7}
+    ];
+    loop = setInterval(Frame,FPS)
+    score = 0;
+    currentDirection = "";
+    lastDirection = "";
+    scr.innerHTML = `Score: ${score}`;
+    lngth.innerHTML = `Length: ${snake.length}`
 }
