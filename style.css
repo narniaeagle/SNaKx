@@ -17,12 +17,13 @@ body{
   margin-right: 24px;
 }
 
-#menu{
+#game-over{
   background-color: rgba(0,0,0, 1);
   visibility: hidden;
   z-index: 1;
 }
 #board{
+  position: relative;
   width: 82%;
   height: 100%;
   border: 4px solid black;

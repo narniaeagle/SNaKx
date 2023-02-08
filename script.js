@@ -20,7 +20,7 @@ const lngth = document.querySelector("#length");
 const sttngs = document.querySelector("#settings");
 sttngs.addEventListener("click", Settings);
 const spd = document.querySelector("#speed");
-const mn = document.querySelector("#menu");
+const gm = document.querySelector("#game-over");
 
 let currentDirection = "";
 let lastDirection = "";
@@ -183,8 +183,8 @@ function UpdateHighScore(){
 function GameOver(){
     clearInterval(loop);
     UpdateHighScore();
-    mn.style.visibility = "visible";
-    mn.style.zIndex= "1";
+    gm.style.visibility = "visible";
+    gm.style.zIndex= "1";
 }
 function Reset(){
     snake = [
