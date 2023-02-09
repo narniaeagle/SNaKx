@@ -1,3 +1,5 @@
+const sldrFrt = document.querySelector("#slider-fruit");
+let fruit = sldrFrt.value
 const sldrEat = document.querySelector("#slider-eat");
 let eat = sldrEat.value
 const sldrSpeed = document.querySelector("#slider-speed");
@@ -17,8 +19,8 @@ let score = 0;
 let headColor = "rgb(9, 235, 73)";
 let bodyColor = "rgb(27, 171, 68)";
 let snake = [
-    {x: 15, y: 7},
-    {x: 14, y: 7}
+    {x: 13, y: 7},
+    {x: 12, y: 7}
 ];
 const lngth = document.querySelector("#length");
 const sttngs = document.querySelector("#settings");
@@ -26,6 +28,7 @@ sttngs.addEventListener("click", Menu);
 const spd = document.querySelector("#speed");
 const mn = document.querySelector("#menu")
 mn.style.visibility = "hidden"
+let gameOver = false;
 
 let currentDirection = "";
 let lastDirection = "";
@@ -39,7 +42,8 @@ const input = {
     down: "ArrowDown",
     p: "p",
     escape: "Escape",
-    space: " "
+    space: " ",
+    r: "r"
 }
 
 let pause = false;
@@ -48,8 +52,10 @@ document.addEventListener("keyup", setDirection); // add event listener to all k
 let sqrSize = 10;
 let xsqr = w / sqrSize; // number of squares on the x line
 let ysqr = h / sqrSize; // number of the squares on the y line
-let food = Food();
-
+let food = [
+    {x: 17 , y: 7}
+];
+let created = fruit-1;
 
 const ctx = board.getContext("2d"); // drawing tool
 
@@ -66,6 +72,7 @@ function Menu(){
    
     if(mn.style.visibility == "hidden"){
         mn.style.visibility = "visible"
+        pause = true;
     }
     else if( mn.style.visibility == "visible"){
         mn.style.visibility = "hidden"
@@ -108,23 +115,32 @@ function Snake(){
 }
 
 function setDirection(k){
-    if(k.key == input.p || k.key == input.escape || k.key == input.space){
-        pause = !pause;
-        pause ? msg.innerHTML = "PAUSED" : msg.innerHTML = "";
+    if(gameOver == false){
+        if(k.key == input.p || k.key == input.escape || k.key == input.space){
+            pause = !pause;
+            pause ? msg.innerHTML = "PAUSED" : msg.innerHTML = "";
+        }
+        if(pause == false){
+            lastDirection = currentDirection
+            if(k.key == input.right && lastDirection != input.left ||
+                k.key == input.left && lastDirection != input.right ||
+                k.key == input.up && lastDirection != input.down ||
+                k.key == input.down && lastDirection != input.up)
+                currentDirection = k.key // get a new key if it's one of the arrow keys
+        }
     }
-    if(pause == false){
-        lastDirection = currentDirection
-        if(k.key == input.right && lastDirection != input.left ||
-            k.key == input.left && lastDirection != input.right ||
-            k.key == input.up && lastDirection != input.down ||
-            k.key == input.down && lastDirection != input.up)
-            currentDirection = k.key // get a new key if it's one of the arrow keys
+    else if(gameOver == true && k.key == input.r){
+        Reset();
     }
 }
 
-function Movement(head, tail){
-    if(food.x == snake[0].x && food.y == snake[0].y){ // if location of the food is same as the location of snake's head
-        food = Food(); // create a new food location
+function Movement(head){
+    const tail = {...snake[snake.length-1]};
+    if(food.some(function (f, index) {if(f.x == snake[0].x && f.y == snake[0].y){food.splice(index, 1); return true;}})){ // if location of the food is same as the location of snake's head
+        created++;
+        for(let i = 1; i < created; i++){
+            Food(); // create a new food location
+        }
         score++;
         scr.innerHTML = `Score: ${score}`;
         UpdateHighScore();
@@ -140,39 +156,44 @@ function Movement(head, tail){
 }
 function SnakeMove(){
     const head = {...snake[0]}; // creating a new head seperate from the original (no pointer) 
-    const tail = {...snake[snake.length-1]};
     if( currentDirection == input.left && lastDirection != input.right){
         head.x -= 1; // move head to the left 1 square
-        Movement(head, tail);
+        Movement(head);
     }
     else if(currentDirection == input.right && lastDirection != input.left){
         head.x += 1;
-        Movement(head, tail);
+        Movement(head);
     }
     else if(currentDirection == input.down && lastDirection != input.up){
         head.y += 1;
-        Movement(head, tail);
+        Movement(head);
     }
     else if(currentDirection == input.up && lastDirection != input.down){
         head.y -= 1;
-        Movement(head, tail);
+        Movement(head);
     }
 }
 function Food(){ // generate a location for the food
-    let food = {
-        x: Math.floor(Math.random() * xsqr),
-        y: Math.floor(Math.random() * ysqr)
-    }
-    while(snake.some((tile) => tile.x == food.x && tile.y == food.y)){ // some method returns true if any of the list items passes the condition
-        food = {
+    if (created > 0){
+        let fd = {
             x: Math.floor(Math.random() * xsqr),
             y: Math.floor(Math.random() * ysqr)
         }
+        while(snake.some((tile) => tile.x == food.x && tile.y == food.y)){ // some method returns true if any of the list items passes the condition
+            fd = {
+                x: Math.floor(Math.random() * xsqr),
+                y: Math.floor(Math.random() * ysqr)
+            }
+        }
+        created--;
+        food.push(fd)
     }
-    return food;
 }
 function DrawFood(){
-    Square(food.x, food.y, "red")
+    for(let i = 0; i < food.length; i++)    {
+        Square(food[i].x, food[i].y, "red")
+    }
+   
 }
 
 
@@ -198,8 +219,8 @@ function UpdateHighScore(){
     }
 }
 function GameOver(){
+    gameOver = true;
     board.style.borderColor = "red";
-    document.removeEventListener("keyup", setDirection)
     clearInterval(loop);
     UpdateHighScore();
     msg.innerHTML = "RESTART?";
@@ -207,8 +228,8 @@ function GameOver(){
     msg.style.cursor =  "url('https://cdn.custom-cursor.com/db/15051/32/starter-northern-lights-pointer.png'), auto";
 }
 function Reset(){
+    gameOver = false;
     board.style.borderColor = "black";
-    document.addEventListener("keyup", setDirection)
     msg.style.cursor = "inherit";
     msg.removeEventListener("click", Reset);
     msg.innerHTML = "PRESS ARROW KEYS TO START"
@@ -216,9 +237,10 @@ function Reset(){
         {x: 15, y: 7},
         {x: 14, y: 7}
     ];
-    food = Food();
-    loop = setInterval(Frame,FPS)
+    food = [{x: 17 , y: 7}];
+    loop = setInterval(Frame,FPS);
     score = 0;
+    created = fruit-1;
     currentDirection = "";
     lastDirection = "";
     pause = false;
@@ -227,11 +249,12 @@ function Reset(){
 }
 
 function Settings(){
+    fruit = sldrFrt.value
+    created = fruit-1;
     speed = 1 + (sldrSpeed.value / 100);
     FPS = 1000 / (8 * speed);
     clearInterval(loop)
     loop = setInterval(Frame,FPS)
     spd.innerHTML = `Speed: ${Math.round((speed-1)*100)}`
     eat = sldrEat.value
-    console.log(eat);
 }
