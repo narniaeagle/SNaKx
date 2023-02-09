@@ -2,8 +2,8 @@
 
 # SNaKx
 A classic snake game with customizable settings
-![SnaKx settings](https://imgur.com/epDtUDy)
-![SNaKx lose screen](https://imgur.com/lYSmZ4s)
+![SnaKx settings](https://imgur.com/a/ilTAf5i)
+
 
 # Key Features
 - A snake moves non-stop and is directed by the player with the keyboard.
