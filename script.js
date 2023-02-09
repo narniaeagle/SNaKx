@@ -137,8 +137,9 @@ function setDirection(k){
 function Movement(head){
     const tail = {...snake[snake.length-1]};
     if(food.some(function (f, index) {if(f.x == snake[0].x && f.y == snake[0].y){food.splice(index, 1); return true;}})){ // if location of the food is same as the location of snake's head
-        created++;
-
+        if(food.length < fruit){
+                created++;
+        }
             Food(); // create a new food location
 
         score++;
@@ -249,8 +250,20 @@ function Reset(){
 }
 
 function Settings(){
-    fruit = sldrFrt.value
-    created = fruit-1;
+    let val = 0;
+
+    val = fruit;
+    fruit = Math.floor(sldrFrt.value);
+    if(fruit > val){
+        if(food.length < fruit){
+            val =  Math.abs(val - fruit);
+            created = val;
+        }
+    }
+    else if(val > fruit){
+        created = 0;
+    }
+   
     speed = 1 + (sldrSpeed.value / 100);
     FPS = 1000 / (8 * speed);
     if(gameOver == false){
