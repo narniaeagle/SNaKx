@@ -49,7 +49,7 @@ const input = {
 let pause = false;
 
 document.addEventListener("keyup", setDirection); // add event listener to all keypress
-let sqrSize = 10;
+let sqrSize = 6;
 let xsqr = w / sqrSize; // number of squares on the x line
 let ysqr = h / sqrSize; // number of the squares on the y line
 let food = [
