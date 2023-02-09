@@ -138,9 +138,9 @@ function Movement(head){
     const tail = {...snake[snake.length-1]};
     if(food.some(function (f, index) {if(f.x == snake[0].x && f.y == snake[0].y){food.splice(index, 1); return true;}})){ // if location of the food is same as the location of snake's head
         created++;
-        for(let i = 1; i < created; i++){
+
             Food(); // create a new food location
-        }
+
         score++;
         scr.innerHTML = `Score: ${score}`;
         UpdateHighScore();
@@ -253,8 +253,10 @@ function Settings(){
     created = fruit-1;
     speed = 1 + (sldrSpeed.value / 100);
     FPS = 1000 / (8 * speed);
-    clearInterval(loop)
-    loop = setInterval(Frame,FPS)
+    if(gameOver == false){
+        clearInterval(loop)
+        loop = setInterval(Frame,FPS)
+    }
     spd.innerHTML = `Speed: ${Math.round((speed-1)*100)}`
     eat = sldrEat.value
 }
