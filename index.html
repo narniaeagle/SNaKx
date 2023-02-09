@@ -14,8 +14,15 @@
             <span id="message"> PRESS ARROW KEYS TO START</span>
             <span id="h-score"> High Score: 0</span>
         </div>
-        <div id="game-over">
-            <canvas id="board"></canvas>
+        <div id="menu">
+            Speed:
+            <span> <input id="slider-speed" type="range" min="1" max="100" value="1"></span>
+            Length:
+            <span> <input  id="slider-eat" type="range" min="1" max="10" value="1"></span>
+
+            <div id="container">
+                <canvas id="board"></canvas>
+            </div>
         </div>
         <div class="lowerpart">
             <div class="center">

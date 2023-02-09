@@ -1,5 +1,6 @@
 body{
   background-color: rgb(22, 22, 85);
+  cursor: url("https://cdn.custom-cursor.com/db/15052/32/starter-northern-lights-cursor.png"),auto;
 }
 .upperpart{
   display: flex;
@@ -16,11 +17,12 @@ body{
   color: white;
   margin-right: 24px;
 }
-
-#game-over{
-  background-color: rgba(0,0,0, 0.4);
+#menu{
+  background-color: rgba(0, 0, 0, 0.8);
   visibility: hidden;
-  z-index: 1;
+  text-align: center;
+  color: white;
+  z-index: 2;
 }
 #board{
   position: relative;
@@ -44,9 +46,7 @@ body{
   color: white;
 }
 #settings{
-  width:200px;
-  height:200px;
-  cursor: url(images/pointer.png), pointer;
+  cursor: url("https://cdn.custom-cursor.com/db/15051/32/starter-northern-lights-pointer.png"), auto;
   font-size: 18px;
   color: white;
   content: "\2699";

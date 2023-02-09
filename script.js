@@ -1,4 +1,7 @@
-let speed = 1.01; // 1.01 to 2 slider
+const sldrEat = document.querySelector("#slider-eat");
+let eat = sldrEat.value
+const sldrSpeed = document.querySelector("#slider-speed");
+let speed = 1 + (sldrSpeed.value/100); // 1.01 to 2 slider
 let FPS = 1000 / (8 * speed); // fps
 let loop;
 let boardColor = "rgb(6, 61, 21)";
@@ -21,8 +24,8 @@ const lngth = document.querySelector("#length");
 const sttngs = document.querySelector("#settings");
 sttngs.addEventListener("click", Menu);
 const spd = document.querySelector("#speed");
-const gm = document.querySelector("#game-over");
 const mn = document.querySelector("#menu")
+mn.style.visibility = "hidden"
 
 let currentDirection = "";
 let lastDirection = "";
@@ -60,7 +63,14 @@ loop = setInterval(Frame,FPS) // 66ms * 15 = 1000ms (calling this function 15 ti
 
 
 function Menu(){
-    mn.style.visibility = "visible";
+   
+    if(mn.style.visibility == "hidden"){
+        mn.style.visibility = "visible"
+    }
+    else if( mn.style.visibility == "visible"){
+        mn.style.visibility = "hidden"
+        Settings();
+    }
 }
 
 
@@ -100,6 +110,7 @@ function Snake(){
 function setDirection(k){
     if(k.key == input.p || k.key == input.escape || k.key == input.space){
         pause = !pause;
+        pause ? msg.innerHTML = "PAUSED" : msg.innerHTML = "";
     }
     if(pause == false){
         lastDirection = currentDirection
@@ -111,12 +122,15 @@ function setDirection(k){
     }
 }
 
-function Movement(head){
+function Movement(head, tail){
     if(food.x == snake[0].x && food.y == snake[0].y){ // if location of the food is same as the location of snake's head
         food = Food(); // create a new food location
         score++;
         scr.innerHTML = `Score: ${score}`;
         UpdateHighScore();
+        for(let i = 1; i < eat; i++){
+            snake.push(tail);
+        }
     }
     else{
         snake.pop(); // else remove the snake's last part
@@ -126,21 +140,22 @@ function Movement(head){
 }
 function SnakeMove(){
     const head = {...snake[0]}; // creating a new head seperate from the original (no pointer) 
+    const tail = {...snake[snake.length-1]};
     if( currentDirection == input.left && lastDirection != input.right){
         head.x -= 1; // move head to the left 1 square
-        Movement(head);
+        Movement(head, tail);
     }
     else if(currentDirection == input.right && lastDirection != input.left){
         head.x += 1;
-        Movement(head);
+        Movement(head, tail);
     }
     else if(currentDirection == input.down && lastDirection != input.up){
         head.y += 1;
-        Movement(head);
+        Movement(head, tail);
     }
     else if(currentDirection == input.up && lastDirection != input.down){
         head.y -= 1;
-        Movement(head);
+        Movement(head, tail);
     }
 }
 function Food(){ // generate a location for the food
@@ -183,17 +198,20 @@ function UpdateHighScore(){
     }
 }
 function GameOver(){
+    board.style.borderColor = "red";
+    document.removeEventListener("keyup", setDirection)
     clearInterval(loop);
     UpdateHighScore();
-    gm.style.visibility = "visible";
     msg.innerHTML = "RESTART?";
     msg.addEventListener("click", Reset);
-    msg.style.cursor = "pointer";
+    msg.style.cursor =  "url('https://cdn.custom-cursor.com/db/15051/32/starter-northern-lights-pointer.png'), auto";
 }
 function Reset(){
+    board.style.borderColor = "black";
+    document.addEventListener("keyup", setDirection)
+    msg.style.cursor = "inherit";
     msg.removeEventListener("click", Reset);
     msg.innerHTML = "PRESS ARROW KEYS TO START"
-    gm.style.visibility = "hidden";
     snake = [
         {x: 15, y: 7},
         {x: 14, y: 7}
@@ -203,6 +221,17 @@ function Reset(){
     score = 0;
     currentDirection = "";
     lastDirection = "";
+    pause = false;
     scr.innerHTML = `Score: ${score}`;
     lngth.innerHTML = `Length: ${snake.length}`
+}
+
+function Settings(){
+    speed = 1 + (sldrSpeed.value / 100);
+    FPS = 1000 / (8 * speed);
+    clearInterval(loop)
+    loop = setInterval(Frame,FPS)
+    spd.innerHTML = `Speed: ${Math.round((speed-1)*100)}`
+    eat = sldrEat.value
+    console.log(eat);
 }
