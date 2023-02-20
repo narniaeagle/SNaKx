@@ -1,7 +1,7 @@
 
 
 # SNaKx
-A classic snake game with customizable settings
+A classic snake game with customizable settings. You can play the game at https://disgusting-route.surge.sh/
 ![SnaKx settings](https://i.imgur.com/8zOLjj3.png)
 ![SNaKx lose screen](https://i.imgur.com/R1EmMBf.png)
 
